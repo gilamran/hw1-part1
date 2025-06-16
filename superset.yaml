@@ -1,10 +1,27 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-pod
+  name: superset
+  labels:
+    app: superset
 spec:
   containers:
-    - name: nginx
-      image: nginx
+    - name: superset
+      image: apache/superset
+      env:
+        - name: SUPERSET_SECRET_KEY
+          value: 'thisISaSECRET_1234'
       ports:
-        - containerPort: 80
+        - containerPort: 8088
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superset-service
+spec:
+  selector:
+    app: superset
+  ports:
+    - port: 8088
+      targetPort: 8088
+  type: NodePort
